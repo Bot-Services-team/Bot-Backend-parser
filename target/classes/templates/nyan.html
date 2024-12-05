@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Nyan Cat</title>
+    <style>
+        body {
+            background-color: #000;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        img {
+            scale: 1.2;
+            position: absolute;
+            animation: fly 5s linear infinite;
+        }
+        @keyframes fly {
+            0% { left: -650px; }
+            100% { left: 110%; }
+        }
+    </style>
+</head>
+<body>
+    <img src="https://upload.wikimedia.org/wikipedia/ru/6/6b/NyanCat.gif" alt="Nyan Cat">
+</body>
+</html>

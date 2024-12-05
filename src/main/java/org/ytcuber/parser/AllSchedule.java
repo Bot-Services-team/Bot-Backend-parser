@@ -1,5 +1,7 @@
 package org.ytcuber.parser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,9 +12,13 @@ import org.ytcuber.initialization.Initialization;
 import org.ytcuber.initialization.InitializationLocations;
 import org.ytcuber.initialization.InitializationReplacement;
 
+import java.io.IOException;
+import java.io.File;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -21,6 +27,7 @@ import java.util.concurrent.Executors;
 
 @Component
 public class AllSchedule {
+    private static final Logger logger = LoggerFactory.getLogger(AllSchedule.class);
     private Initialization initialization;
     private GroupProcessor groupProcessor;
     private GroupRepository groupRepository;
@@ -38,19 +45,34 @@ public class AllSchedule {
         this.groupSchedule = groupSchedule;
     }
 
-    @PostConstruct
-    public void init() throws Exception {
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
-
-        // Заполнение групп
-        for (int i = 1; i <= 4; i++) {
-            groupProcessor.processGroups(String.valueOf(i));
+@PostConstruct
+public void init() {
+    ExecutorService executorService = Executors.newFixedThreadPool(2);
+    try {
+        // Create directory if it doesn't exist
+        File mainExcelDir = new File("./mainexcel");
+        if (!mainExcelDir.exists()) {
+            mainExcelDir.mkdirs();
         }
 
-        // Заполнение кабинетов
-        initializationLocations.processLocationParse("Cab2");
+        // Wrap potentially failing operations in try-catch blocks
+        try {
+            // Заполнение групп
+            for (int i = 1; i <= 4; i++) {
+                groupProcessor.processGroups(String.valueOf(i));
+            }
+        } catch (IOException e) {
+            logger.warn("Failed to process groups: " + e.getMessage());
+        }
 
-        // Группа заглушка (для не существующих групп)
+        try {
+            // Заполнение кабинетов
+            initializationLocations.processLocationParse("Cab2");
+        } catch (IOException e) {
+            logger.warn("Failed to parse locations: " + e.getMessage());
+        }
+
+        // Group initialization can continue as before
         List<Group> groupsToSave = new ArrayList<>();
         Group group = new Group();
         group.setTitle("АХАХА");
@@ -63,6 +85,7 @@ public class AllSchedule {
 
         // Запуск парсинга замен в отдельном потоке
         Callable<Void> replacementTask = () -> {
+            //     initializationReplacement.processExcelReplacementParse("05.12.24-07.12.24");
             initializationReplacement.processExcelReplacementParse(dateRanges[0]);
             try {
                 initializationReplacement.processExcelReplacementParse(dateRanges[1]);
@@ -71,7 +94,7 @@ public class AllSchedule {
             return null;
         };
 
-        // Запуск парсинга расписания в отдельном потоке
+        // Запуск парсинга расисания в отдельном потоке
         Callable<Void> scheduleTask = () -> {
             int lastId = groupRepository.findLastId() - 1;
             for (int i = 1; i <= lastId; i++) {
@@ -87,27 +110,16 @@ public class AllSchedule {
         tasks.add(scheduleTask);
 
         try {
-            // Ожидаем выполнения всех задач
             executorService.invokeAll(tasks);
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // Обрабатываем прерывание
-        } finally {
-            executorService.shutdown(); // Закрываем пул потоков
+            Thread.currentThread().interrupt();
         }
-
-//        // Заполнение замен
-//        initializationReplacement.processExcelReplacementParse("02.12.24-04.12.24");
-//
-//        // Заполнение расписания
-//        int lastId = groupRepository.findLastId() - 1;
-//        for (int i = 1; i <= lastId; i++) {
-//            String groupName = String.valueOf(groupRepository.findNameById(i));
-//            initialization.processExcelParse(groupName);
-//        }
-
-//        Нет субботы у 25, 54, 67, Странная фигня у КС-23-1
-//        String groupName = String.valueOf(groupRepository.findNameById(38)); initialization.processExcelParse(groupName);
+    } catch (Exception e) {
+        logger.error("Failed to initialize AllSchedule: " + e.getMessage());
+    } finally {
+        executorService.shutdown();
     }
+}
 
     public static String[] generateWeeklyDateRange() {
         // Получаем текущую дату

@@ -1,0 +1,4 @@
+org\ytcuber\database\repository\ReplacementRepository.class
+org\ytcuber\database\types\DayOfWeek.class
+org\ytcuber\database\model\Replacement.class
+org\ytcuber\database\model\Group.class
