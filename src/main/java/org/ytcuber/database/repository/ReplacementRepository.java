@@ -21,6 +21,6 @@ public interface ReplacementRepository extends JpaRepository<Replacement, Long> 
         @Param("subgroup") Integer subgroup
     );
 
-    @Query("SELECT r FROM Replacement r WHERE r.teacher = :teacherName")
+    @Query("SELECT r FROM Replacement r WHERE r.teacher Like %:teacherName%")
     List<Replacement> findReplacementsByTeacher(@Param("teacherName") String teacherName);
 }

@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.ytcuber.database.model.Lesson;
 
+import java.io.Console;
 import java.util.List;
 
 @Repository
@@ -25,6 +26,6 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
             "                       ORDER BY l.dayOfWeek, l.ordinal")
     List<Lesson> findLessonsByTeacherAndOdd(@Param("teacherName") String teacherName, @Param("odd") Integer odd);
 
-    @Query("SELECT l FROM Lesson l WHERE l.teacher = :teacherName")
+    @Query("SELECT l FROM Lesson l WHERE l.teacher LIKE %:teacherName%")
     List<Lesson> findLessonsByTeacher(@Param("teacherName") String teacherName);
 }
