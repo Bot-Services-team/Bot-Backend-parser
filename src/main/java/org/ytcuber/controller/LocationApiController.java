@@ -32,20 +32,20 @@ public class LocationApiController {
     }
     
     @GetMapping("/{name}/lessons")
-    public ResponseEntity<List<Lesson>> getLocationNameByName(@PathVariable String name) {
-        List<Lesson> lessons = lessonRepository.findLessonsByLocation(name);
-        if (!lessons.isEmpty()) {
-            return ResponseEntity.ok(lessons);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<List<Lesson>> getLocationNameByName(
+            @PathVariable String name,
+            @RequestParam(required = true) Integer odd
+    ) {
+        if (odd != null) {
+            return ResponseEntity.ok(lessonRepository.findLessonsByLocationAndOdd(name, odd));
+        }   
+        return ResponseEntity.ok(lessonRepository.findLessonsByLocation(name));
     }
 
     @GetMapping("/{name}/replacements")
-    public ResponseEntity<List<Replacement>> getLocationNameByNameReplacements(@PathVariable String name) {
-        List<Replacement> replacements = replacementRepository.findReplacementsByLocation(name);
-        if (!replacements.isEmpty()) {
-            return ResponseEntity.ok(replacements);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<List<Replacement>> getLocationNameByNameReplacements(
+            @PathVariable String name
+    ) {
+        return ResponseEntity.ok(replacementRepository.findReplacementsByLocation(name));
     }
 }

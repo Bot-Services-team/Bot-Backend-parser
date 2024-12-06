@@ -29,6 +29,9 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     @Query("SELECT l FROM Lesson l WHERE l.teacher LIKE %:teacherName%")
     List<Lesson> findLessonsByTeacher(@Param("teacherName") String teacherName);
 
+    @Query("SELECT l FROM Lesson l WHERE l.location = :locationName AND l.odd = :odd")
+    List<Lesson> findLessonsByLocationAndOdd(@Param("locationName") String locationName, @Param("odd") Integer odd);
+
     @Query("SELECT l FROM Lesson l WHERE l.location = :locationName")
     List<Lesson> findLessonsByLocation(@Param("locationName") String locationName);
 }
