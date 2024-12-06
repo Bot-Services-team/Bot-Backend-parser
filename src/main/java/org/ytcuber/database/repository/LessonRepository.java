@@ -24,4 +24,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     @Query("SELECT l FROM Lesson l WHERE l.teacher = :teacherName AND l.odd = :odd\n" +
             "                       ORDER BY l.dayOfWeek, l.ordinal")
     List<Lesson> findLessonsByTeacherAndOdd(@Param("teacherName") String teacherName, @Param("odd") Integer odd);
+
+    @Query("SELECT l FROM Lesson l WHERE l.teacher = :teacherName")
+    List<Lesson> findLessonsByTeacher(@Param("teacherName") String teacherName);
 }

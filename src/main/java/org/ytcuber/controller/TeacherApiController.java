@@ -13,8 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/teachers")
 @CrossOrigin(origins = "*")
-// Не работает
-// TODO: Замапить нормальным образом
 public class TeacherApiController {
     
     private final LessonRepository lessonRepository;
@@ -29,11 +27,14 @@ public class TeacherApiController {
     @GetMapping("/{teacherName}/lessons")
     public ResponseEntity<List<Lesson>> getTeacherLessons(
             @PathVariable String teacherName,
-            @RequestParam Integer odd
+            @RequestParam(required = false) Integer odd
     ) {
-        return ResponseEntity.ok(
-            lessonRepository.findLessonsByTeacherAndOdd(teacherName, odd)
-        );
+        if (odd != null) {
+            return ResponseEntity.ok(
+                lessonRepository.findLessonsByTeacherAndOdd(teacherName, odd)
+            );
+        }
+        return ResponseEntity.ok(lessonRepository.findLessonsByTeacher(teacherName));
     }
 
     @GetMapping("/{teacherName}/replacements")
@@ -41,7 +42,7 @@ public class TeacherApiController {
             @PathVariable String teacherName
     ) {
         return ResponseEntity.ok(
-            replacementRepository.findReplacementsByTeacherAndOdd(teacherName)
+            replacementRepository.findReplacementsByTeacher(teacherName)
         );
     }
 }
