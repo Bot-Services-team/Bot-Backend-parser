@@ -13,5 +13,4 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
 
     @Query("SELECT l.id FROM Location l ORDER BY l.id DESC LIMIT 1")
     Integer findLastId();
-
 }

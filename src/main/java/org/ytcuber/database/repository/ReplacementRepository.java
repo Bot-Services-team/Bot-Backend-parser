@@ -23,4 +23,7 @@ public interface ReplacementRepository extends JpaRepository<Replacement, Long> 
 
     @Query("SELECT r FROM Replacement r WHERE r.teacher Like %:teacherName%")
     List<Replacement> findReplacementsByTeacher(@Param("teacherName") String teacherName);
+
+    @Query("SELECT r FROM Replacement r WHERE r.location = :locationName")
+    List<Replacement> findReplacementsByLocation(@Param("locationName") String locationName);
 }

@@ -41,8 +41,6 @@ public class TeacherApiController {
     public ResponseEntity<List<Replacement>> getTeacherReplacements(
             @PathVariable String teacherName
     ) {
-        return ResponseEntity.ok(
-            replacementRepository.findReplacementsByTeacher(teacherName)
-        );
+        return ResponseEntity.ok(replacementRepository.findReplacementsByTeacher(teacherName));
     }
 }
