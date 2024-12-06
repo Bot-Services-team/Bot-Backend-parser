@@ -86,7 +86,9 @@ public void init() {
         // Запуск парсинга замен в отдельном потоке
         Callable<Void> replacementTask = () -> {
             //     initializationReplacement.processExcelReplacementParse("05.12.24-07.12.24");
-            initializationReplacement.processExcelReplacementParse(dateRanges[0]);
+            try {
+                initializationReplacement.processExcelReplacementParse(dateRanges[0]);
+            } catch (Exception ignored) { }
             try {
                 initializationReplacement.processExcelReplacementParse(dateRanges[1]);
             } catch (Exception ignored) { }

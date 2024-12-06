@@ -36,7 +36,7 @@ public class GroupSchedule {
 
         Integer groupId = groupRepository.findByName(groupName);
         List<Lesson> lessons = lessonRepository.findLessonsByGroupIdAndSubgroupAndOdd(groupId, subgroup, odd);
-        List<Replacement> replacements = replacementRepository.findReplacementsByGroupIdAndSubgroup(groupId, subgroup);
+        List<Replacement> replacements = replacementRepository.findReplacementsByGroupTitleAndSubgroup(groupName, subgroup);
 
         List<LessonDTO> lessonDTOS = lessons.stream()
                 .map(lesson -> new LessonDTO(

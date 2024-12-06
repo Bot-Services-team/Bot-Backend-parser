@@ -26,12 +26,12 @@ public class LessonApiController {
     @GetMapping
     public ResponseEntity<List<Lesson>> getAllLessons(
             @RequestParam(required = false) Integer subgroup,
-            @RequestParam(required = false) Integer groupId,
+            @RequestParam(required = false) String groupName,
             @RequestParam(required = false) Integer odd
     ) {
-        if (subgroup != null && groupId != null && odd != null) {
+        if (subgroup != null && groupName != null && odd != null) {
             return ResponseEntity.ok(
-                lessonRepository.findLessonsByGroupIdAndSubgroupAndOdd(groupId, subgroup, odd)
+                lessonRepository.findLessonsByGroupIdAndSubgroupAndOdd(groupRepository.findByName(groupName), subgroup, odd)
             );
         }
         
