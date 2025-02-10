@@ -85,7 +85,6 @@ public void init() {
 
         // Запуск парсинга замен в отдельном потоке
         Callable<Void> replacementTask = () -> {
-            //     initializationReplacement.processExcelReplacementParse("05.12.24-07.12.24");
             try {
                 initializationReplacement.processExcelReplacementParse(dateRanges[0]);
             } catch (Exception ignored) { }
@@ -150,6 +149,9 @@ public void init() {
 
         // Генерируем строку диапазона для следующего диапазона
         String nextDateRange = formattedNextStartDate + "-" + formattedNextEndDate;
+
+        System.out.println("Replace Date:");
+        System.out.println(dateRange);
 
         return new String[] {dateRange, nextDateRange};
     }
