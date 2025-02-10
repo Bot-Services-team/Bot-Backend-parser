@@ -41,7 +41,7 @@ public class GroupProcessor {
                 String groupName = fileName.substring(0, fileName.length() - 5); // Убираем .xlsx
 //                groupName = groupName.replace('-', '.'); // Заменяем дефисы на подчеркивания
                 Group group = new Group();
-                group.setTitle(groupName.toLowerCase());
+                group.setTitle(groupName);
                 group.setSquad(Integer.valueOf(squadNum));
                 groupsToSave.add(group);
             }
