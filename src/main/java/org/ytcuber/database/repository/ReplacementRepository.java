@@ -15,13 +15,13 @@ public interface ReplacementRepository extends JpaRepository<Replacement, Long> 
     @Query("SELECT r FROM Replacement r WHERE r.teacher = :teacherName ORDER BY r.datOfWeek, r.ordinal")
     List<Replacement> findReplacementsByTeacherAndOdd(@Param("teacherName") String teacherName);
     
-    @Query("SELECT r FROM Replacement r WHERE r.group.title = :groupName AND (r.subgroup = :subgroup OR r.subgroup = 0)")
+    @Query("SELECT r FROM Replacement r WHERE LOWER(r.group.title) = LOWER(:groupName) AND (r.subgroup = :subgroup OR r.subgroup = 0)")
     List<Replacement> findReplacementsByGroupTitleAndSubgroup(
         @Param("groupName") String groupName, 
         @Param("subgroup") Integer subgroup
     );
 
-    @Query("SELECT r FROM Replacement r WHERE r.teacher Like %:teacherName%")
+    @Query("SELECT r FROM Replacement r WHERE LOWER(r.teacher) Like LOWER(%:teacherName%)")
     List<Replacement> findReplacementsByTeacher(@Param("teacherName") String teacherName);
 
     @Query("SELECT r FROM Replacement r WHERE r.location = :locationName")
