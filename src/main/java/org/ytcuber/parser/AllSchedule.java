@@ -152,6 +152,7 @@ public void init() {
 
         System.out.println("Replace Date:");
         System.out.println(dateRange);
+        System.out.println(nextDateRange);
 
         return new String[] {dateRange, nextDateRange};
     }
