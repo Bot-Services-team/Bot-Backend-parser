@@ -85,12 +85,34 @@ public void init() {
 
         // Запуск парсинга замен в отдельном потоке
         Callable<Void> replacementTask = () -> {
+
+            boolean SundaySituation = false;
+
             try {
-                initializationReplacement.processExcelReplacementParse(dateRanges[0]);
-            } catch (Exception ignored) { }
-            try {
+                initializationReplacement.processExcelReplacementParse(dateRanges[2]);
+                SundaySituation = true;
+                System.out.println("Initial "+dateRanges[2]);
+                System.out.println("Sunday true");
+            } catch (Exception ignored) {}
+
+            System.out.println("Sunday: "+SundaySituation);
+
+            if (SundaySituation) {
+                try {
                 initializationReplacement.processExcelReplacementParse(dateRanges[1]);
-            } catch (Exception ignored) { }
+                System.out.println("Initial "+dateRanges[1]);
+                } catch (Exception ignored) {}
+            }else{
+                try {
+                    initializationReplacement.processExcelReplacementParse(dateRanges[0]);
+                    System.out.println("Initial "+dateRanges[0]);
+                } catch (Exception ignored) {}
+
+                try {
+                    initializationReplacement.processExcelReplacementParse(dateRanges[1]);
+                    System.out.println("Initial "+dateRanges[1]);
+                } catch (Exception ignored) {}
+            }
 
             return null;
         };
@@ -150,10 +172,19 @@ public void init() {
         // Генерируем строку диапазона для следующего диапазона
         String nextDateRange = formattedNextStartDate + "-" + formattedNextEndDate;
 
+        LocalDate nextWeekStartDate = startOfWeek.plusDays(7);
+        LocalDate nextWeekEndDate = nextWeekStartDate.plusDays(2);
+
+        String formattedNextWeekStartDate = nextWeekStartDate.format(formatter);
+        String formattedNextWeekEndDate = nextWeekEndDate.format(formatter);
+
+        String nextWeekDateRange = formattedNextWeekStartDate + "-" + formattedNextWeekEndDate;
+
         System.out.println("Replace Date:");
         System.out.println(dateRange);
         System.out.println(nextDateRange);
+        System.out.println(nextWeekDateRange);
 
-        return new String[] {dateRange, nextDateRange};
+        return new String[] {dateRange, nextDateRange, nextWeekDateRange};
     }
 }
