@@ -6,11 +6,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.ytcuber.database.model.Replacement;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
 public interface ReplacementRepository extends JpaRepository<Replacement, Long> {
     List<Replacement> findReplacementsByGroupTitle(String groupName);
+
+    @Query("SELECT r FROM Replacement r WHERE r.date = :date")
+    List<Replacement> dateExist(@Param("date") Date date);
     
     @Query("SELECT r FROM Replacement r WHERE r.teacher = :teacherName ORDER BY r.datOfWeek, r.ordinal")
     List<Replacement> findReplacementsByTeacherAndOdd(@Param("teacherName") String teacherName);

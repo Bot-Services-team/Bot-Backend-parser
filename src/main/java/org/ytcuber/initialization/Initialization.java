@@ -38,7 +38,7 @@ public class Initialization {
 
     @PostConstruct
     private void init() {
-        System.out.println("Можно написать инициализацию, но я не буду");
+        System.out.println("Init");
     }
 
     public void processExcelParse(String groupName) throws IOException {
@@ -87,8 +87,6 @@ public class Initialization {
             try (FileOutputStream fos = new FileOutputStream(file)) {
                 workbook.write(fos);
             }
-            System.out.println("Объединённые ячейки разъединены успешно!");
-            System.out.println();
         } catch (IOException e) {
             e.printStackTrace();
         }
